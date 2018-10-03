@@ -1,0 +1,7 @@
+This file is provided by RPM Fusion project
+Please look for documentation at http://rpmfusion.org/Howto/NVIDIA
+
+To uninstall the package, use the following command:
+
+$ sudo yum remove xorg-x11-drv-nvidia-390xx\* kmod-nvidia-390xx\*
+
