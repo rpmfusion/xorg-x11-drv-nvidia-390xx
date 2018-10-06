@@ -37,7 +37,7 @@
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
 Version:         390.87
-Release:         1%{?dist}
+Release:         2%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -59,8 +59,13 @@ Source15:        nvidia-uvm.conf
 Source16:        99-nvidia-dracut.conf
 Source20:        10-nvidia.rules
 Source21:        nvidia-fallback.service
+Source22:        nvidia-settings-user.desktop
+Source23:        nvidia-settings.appdata.xml
 
 ExclusiveArch: i686 x86_64 armv7hl
+
+BuildRequires:  desktop-file-utils
+BuildRequires:  libappstream-glib
 
 %if 0%{?rhel} > 6 || 0%{?fedora}
 Buildrequires:    systemd
@@ -83,7 +88,7 @@ Requires(post):   ldconfig
 Requires(postun): ldconfig
 Requires(post):   grubby
 Requires:         which
-#Requires:         nvidia-settings%{?_isa} = %{version}
+Requires:         nvidia-settings-390xx%{?_isa} = %{?epoch}:%{version}
 #if 0%{?fedora}
 #Suggests:         nvidia-xconfig%{?_isa} = %{version}
 #else
@@ -204,6 +209,16 @@ Requires:        vulkan-filesystem
 This package provides the shared libraries for %{name}.
 
 
+%package -n nvidia-settings-390xx
+Summary:        Configure the NVIDIA 390xx series graphics driver
+Conflicts:      nvidia-settings
+
+%description -n nvidia-settings-390xx
+The nvidia-settings utility is a tool for configuring the NVIDIA graphics
+driver.  It operates by communicating with the NVIDIA X driver, querying
+and updating state as appropriate.
+
+
 %prep
 %setup -q -c -T
 #Only extract the needed arch
@@ -218,6 +233,9 @@ sh %{SOURCE2} \
 %endif
   --extract-only --target nvidiapkg-%{_target_cpu}
 ln -s nvidiapkg-%{_target_cpu} nvidiapkg
+
+sed -i -e "s/__UTILS_PATH__\///" \
+       -e "s/__PIXMAP_PATH__\///" nvidiapkg/nvidia-settings.desktop
 
 
 %build
@@ -399,6 +417,25 @@ install -p -m 0644 %{SOURCE20} %{buildroot}%{_udevrulesdir}
 install -p -m 0644 %{SOURCE21} %{buildroot}%{_unitdir}
 %endif
 
+# Install nvidia-settings and dependencies
+mkdir -p %{buildroot}%{_sysconfdir}/xdg/autostart \
+         %{buildroot}%{_bindir} \
+         %{buildroot}%{_datadir}/{applications,pixmaps} \
+         %{buildroot}%{_mandir}/man1 \
+         %{buildroot}%{_metainfodir}
+
+install -pm 0644 %{SOURCE22} %{buildroot}%{_sysconfdir}/xdg/autostart/
+install -pm 0755 nvidia-settings %{buildroot}%{_bindir}/
+install -pm 0755 libnvidia-gtk3.so.%{version} %{buildroot}%{_libdir}/
+install -pm 0644 %{SOURCE23} %{buildroot}%{_metainfodir}/
+install -pm 0644 nvidia-settings.desktop %{buildroot}%{_datadir}/applications/
+install -pm 0644 nvidia-settings.1.gz %{buildroot}%{_mandir}/man1/
+install -pm 0644 nvidia-settings.png %{buildroot}%{_datadir}/pixmaps/
+
+%check
+desktop-file-validate %{buildroot}/%{_datadir}/applications/nvidia-settings.desktop
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
+
 
 %pre
 if [ "$1" -eq "1" ]; then
@@ -578,12 +615,26 @@ fi ||:
 %{_libdir}/libnvidia-opencl.so.%{version}
 %endif
 
+%files -n nvidia-settings-390xx
+%{_sysconfdir}/xdg/autostart/nvidia-settings-user.desktop
+%{_bindir}/nvidia-settings
+%{_datadir}/applications/nvidia-settings.desktop
+%{_datadir}/pixmaps/nvidia-settings.png
+%{_libdir}/libnvidia-gtk3.so.%{version}
+%{_mandir}/man1/nvidia-settings.1*
+%{_metainfodir}/nvidia-settings.appdata.xml
+
+
+
 %files devel
 %{_includedir}/nvidia/
 %{_libdir}/libnvcuvid.so
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Sat Oct 06 2018 Richard Shaw <hobbes1069@gmail.com> - 3:390.87-2
+- Add nvidia-xsettings-390xx subpackage.
+
 * Sun Sep 23 2018 Richard Shaw <hobbes1069@gmail.com> - 3:390.87-1
 - Update to 390.87.
 
