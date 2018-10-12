@@ -144,13 +144,13 @@ Requires:        %{_nvidia_serie}-kmod >= %{?epoch}:%{version}
 Requires:        %{name}-cuda-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Requires:        nvidia-persistenced%{?_isa} >= %{version}
 %if 0%{?fedora}
-#Suggests:        nvidia-modprobe%{?_isa} = %{version}
+Suggests:        nvidia-modprobe%{?_isa} >= %{version}
 # Boolean dependencies are only fedora
 %ifarch x86_64
 Requires:        (%{name}-cuda-libs(x86-32) = %{?epoch}:%{version}-%{release} if libGL(x86-32))
 %endif
-#else
-#Requires:        nvidia-modprobe%{?_isa} = %{version}
+%else
+Requires:        nvidia-modprobe%{?_isa} >= %{version}
 %endif
 Requires:        ocl-icd%{?_isa}
 Requires:        opencl-filesystem
@@ -589,9 +589,9 @@ fi ||:
 
 %changelog
 * Fri Oct 12 2018 Nicolas Chauvet <kwizart@gmail.com> - 3:390.87-3
-- Allow a higher persistenced
+- Allow a higher persistenced and nvidia-modprobe
 
-* Sat Oct 08 2018 Richard Shaw <hobbes1069@gmail.com> - 3:390.87-2
+* Sat Oct 06 2018 Richard Shaw <hobbes1069@gmail.com> - 3:390.87-2
 - Add requirement for the nvidia-xsettings-390xx package.
 
 * Sun Sep 23 2018 Richard Shaw <hobbes1069@gmail.com> - 3:390.87-1
