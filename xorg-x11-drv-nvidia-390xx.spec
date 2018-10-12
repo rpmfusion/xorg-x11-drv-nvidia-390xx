@@ -37,7 +37,7 @@
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
 Version:         390.87
-Release:         2%{?dist}
+Release:         3%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -142,7 +142,7 @@ such as OpenGL headers.
 Summary:         CUDA driver for %{name}
 Requires:        %{_nvidia_serie}-kmod >= %{?epoch}:%{version}
 Requires:        %{name}-cuda-libs%{?_isa} = %{?epoch}:%{version}-%{release}
-Requires:        nvidia-persistenced%{?_isa} = %{version}
+Requires:        nvidia-persistenced%{?_isa} >= %{version}
 %if 0%{?fedora}
 #Suggests:        nvidia-modprobe%{?_isa} = %{version}
 # Boolean dependencies are only fedora
@@ -588,6 +588,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Fri Oct 12 2018 Nicolas Chauvet <kwizart@gmail.com> - 3:390.87-3
+- Allow a higher persistenced
+
 * Sat Oct 08 2018 Richard Shaw <hobbes1069@gmail.com> - 3:390.87-2
 - Add requirement for the nvidia-xsettings-390xx package.
 
