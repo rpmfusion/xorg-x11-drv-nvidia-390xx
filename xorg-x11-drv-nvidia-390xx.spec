@@ -97,6 +97,7 @@ Obsoletes:       %{_nvidia_serie}-kmod < %{?epoch}:%{version}
 Provides:        %{_nvidia_serie}-kmod-common = %{?epoch}:%{version}
 Conflicts:       xorg-x11-drv-nvidia-304xx
 Conflicts:       xorg-x11-drv-nvidia-340xx
+Conflicts:       xorg-x11-drv-nvidia
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
 %global         __provides_exclude ^(lib.*GL.*\\.so.*)$
