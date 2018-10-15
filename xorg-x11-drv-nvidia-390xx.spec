@@ -93,8 +93,6 @@ Requires:         nvidia-settings-390xx%{?_isa} = %{version}
 Requires:        %{_nvidia_serie}-kmod >= %{?epoch}:%{version}
 Requires:        %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 
-Obsoletes:       xorg-x11-drv-nvidia < %{?epoch}:%{version}
-Provides:        xorg-x11-drv-nvidia = %{?epoch}:%{version}
 Obsoletes:       %{_nvidia_serie}-kmod < %{?epoch}:%{version}
 Provides:        %{_nvidia_serie}-kmod-common = %{?epoch}:%{version}
 Conflicts:       xorg-x11-drv-nvidia-304xx
