@@ -383,6 +383,8 @@ tar Jcf %{buildroot}%{_datadir}/nvidia-390xx-kmod-%{version}/nvidia-390xx-kmod-%
 
 %if 0%{?fedora}
 # install AppData and add modalias provides
+mkdir -p %{buildroot}%{_datadir}/pixmaps
+install -pm 0644 nvidia-settings.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
 mkdir -p %{buildroot}%{_metainfodir}
 install -pm 0644 %{SOURCE12} %{buildroot}%{_metainfodir}/
 fn=%{buildroot}%{_metainfodir}/xorg-x11-drv-nvidia-390xx.metainfo.xml
@@ -398,9 +400,6 @@ mkdir -p %{buildroot}%{_unitdir}
 install -p -m 0644 %{SOURCE20} %{buildroot}%{_udevrulesdir}
 install -p -m 0644 %{SOURCE21} %{buildroot}%{_unitdir}
 %endif
-
-mkdir -p %{buildroot}%{_datadir}/pixmaps
-install -pm 0644 nvidia-settings.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
 
 
 %pre
