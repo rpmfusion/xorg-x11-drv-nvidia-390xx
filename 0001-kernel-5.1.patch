@@ -1,0 +1,155 @@
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/common/inc/nv-linux.h NVIDIA-Linux-x86_64-390.116_patched/kernel/common/inc/nv-linux.h
+--- NVIDIA-Linux-x86_64-390.116/kernel/common/inc/nv-linux.h	2019-01-27 10:12:19.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/common/inc/nv-linux.h	2019-06-16 04:15:17.000000000 -0500
+@@ -175,7 +175,11 @@
+ 
+ #if defined(NV_VM_INSERT_PAGE_PRESENT)
+ #include <linux/pagemap.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 16, 0)
+ #include <linux/dma-mapping.h>
++#else
++#include <linux/dma-direct.h>
++#endif
+ #endif
+ 
+ #if defined(CONFIG_SWIOTLB) && defined(NVCPU_AARCH64)
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/common/inc/nv-list-helpers.h NVIDIA-Linux-x86_64-390.116_patched/kernel/common/inc/nv-list-helpers.h
+--- NVIDIA-Linux-x86_64-390.116/kernel/common/inc/nv-list-helpers.h	2019-01-27 10:12:19.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/common/inc/nv-list-helpers.h	2019-06-16 04:15:23.000000000 -0500
+@@ -26,6 +26,8 @@
+ #include <linux/list.h>
+ #include "conftest.h"
+ 
++#include <linux/version.h>
++
+ #if !defined (list_for_each)
+ #define list_for_each(pos, head) \
+         for (pos = (head)->next; pos != (head); pos = (pos)->next)
+@@ -91,10 +93,12 @@
+         list_entry((pos)->member.next, typeof(*(pos)), member)
+ #endif
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)
+ static inline int list_is_first(const struct list_head *list,
+                                 const struct list_head *head)
+ {
+     return list->prev == head;
+ }
++#endif
+ 
+ #endif // __NV_LIST_HELPERS_H__
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/conftest.sh NVIDIA-Linux-x86_64-390.116_patched/kernel/conftest.sh
+--- NVIDIA-Linux-x86_64-390.116/kernel/conftest.sh	2019-01-27 06:47:58.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/conftest.sh	2019-06-16 04:15:17.000000000 -0500
+@@ -1930,7 +1930,12 @@
+             # Determine if the phys_to_dma function is present.
+             #
+             CODE="
++            #include <linux/version.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 16, 0)
+             #include <linux/dma-mapping.h>
++#else
++            #include <linux/dma-direct.h>
++#endif
+             void conftest_phys_to_dma(void) {
+                 phys_to_dma();
+             }"
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-connector.c NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-connector.c
+--- NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-connector.c	2019-01-27 10:12:27.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-connector.c	2019-06-16 04:15:23.000000000 -0500
+@@ -30,7 +30,12 @@
+ #include "nvidia-drm-utils.h"
+ #include "nvidia-drm-encoder.h"
+ 
++#include <linux/version.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)
+ #include <drm/drm_crtc_helper.h>
++#else
++#include <drm/drm_probe_helper.h>
++#endif
+ 
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-drv.c NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-drv.c
+--- NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-drv.c	2019-01-27 10:12:27.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-drv.c	2019-06-16 04:15:23.000000000 -0500
+@@ -41,7 +41,12 @@
+ 
+ #include <drm/drmP.h>
+ 
++#include <linux/version.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)
+ #include <drm/drm_crtc_helper.h>
++#else
++#include <drm/drm_probe_helper.h>
++#endif
+ 
+ #if defined(NV_DRM_DRM_GEM_H_PRESENT)
+ #include <drm/drm_gem.h>
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-encoder.c NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-encoder.c
+--- NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-encoder.c	2019-01-27 10:12:27.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-encoder.c	2019-06-16 04:15:23.000000000 -0500
+@@ -31,7 +31,12 @@
+ #include "nvidia-drm-crtc.h"
+ #include "nvidia-drm-helper.h"
+ 
++#include <linux/version.h>
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)
+ #include <drm/drm_crtc_helper.h>
++#else
++#include <drm/drm_probe_helper.h>
++#endif
+ 
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-gem-nvkms-memory.c NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-gem-nvkms-memory.c
+--- NVIDIA-Linux-x86_64-390.116/kernel/nvidia-drm/nvidia-drm-gem-nvkms-memory.c	2019-01-27 10:12:27.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-drm/nvidia-drm-gem-nvkms-memory.c	2019-06-16 04:15:23.000000000 -0500
+@@ -29,6 +29,8 @@
+ 
+ #include "nv-mm.h"
+ 
++#include <linux/version.h>
++
+ static void __nv_drm_gem_nvkms_memory_free(struct nv_drm_gem_object *nv_gem)
+ {
+     struct nv_drm_device *nv_dev = nv_gem->nv_dev;
+@@ -268,7 +270,11 @@
+  */
+ 
+ #if defined(NV_VM_OPS_FAULT_REMOVED_VMA_ARG)
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)
+ static int nv_drm_vma_fault(struct vm_fault *vmf)
++#else
++static vm_fault_t nv_drm_vma_fault(struct vm_fault *vmf)
++#endif
+ {
+     return __nv_drm_vma_fault(vmf->vma, vmf);
+ }
+diff -Naur NVIDIA-Linux-x86_64-390.116/kernel/nvidia-uvm/uvm8.c NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-uvm/uvm8.c
+--- NVIDIA-Linux-x86_64-390.116/kernel/nvidia-uvm/uvm8.c	2019-01-27 10:12:22.000000000 -0600
++++ NVIDIA-Linux-x86_64-390.116_patched/kernel/nvidia-uvm/uvm8.c	2019-06-16 04:15:23.000000000 -0500
+@@ -172,7 +172,11 @@
+     return VM_FAULT_SIGBUS;
+ }
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)
+ static int uvm_vm_fault_sigbus_wrapper(struct vm_fault *vmf)
++#else
++static vm_fault_t uvm_vm_fault_sigbus_wrapper(struct vm_fault *vmf)
++#endif
+ {
+ #if defined(NV_VM_OPS_FAULT_REMOVED_VMA_ARG)
+     return uvm_vm_fault_sigbus(vmf->vma, vmf);
+@@ -507,7 +511,11 @@
+     }
+ }
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)
+ static int uvm_vm_fault_wrapper(struct vm_fault *vmf)
++#else
++static vm_fault_t uvm_vm_fault_wrapper(struct vm_fault *vmf)
++#endif
+ {
+ #if defined(NV_VM_OPS_FAULT_REMOVED_VMA_ARG)
+     return uvm_vm_fault(vmf->vma, vmf);

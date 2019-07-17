@@ -37,7 +37,7 @@
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
 Version:         390.116
-Release:         2%{?dist}
+Release:         3%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -59,6 +59,8 @@ Source15:        nvidia-uvm.conf
 Source16:        99-nvidia-dracut.conf
 Source20:        10-nvidia.rules
 Source21:        nvidia-fallback.service
+
+Patch0:          0001-kernel-5.1.patch
 
 ExclusiveArch:  i686 x86_64 armv7hl
 
@@ -222,6 +224,9 @@ ln -s nvidiapkg-%{_target_cpu} nvidiapkg
 
 sed -i -e "s/__UTILS_PATH__\///" \
        -e "s/__PIXMAP_PATH__\///" nvidiapkg/nvidia-settings.desktop
+
+cd nvidiapkg-%{_target_cpu}
+%patch0 -p1
 
 
 %build
