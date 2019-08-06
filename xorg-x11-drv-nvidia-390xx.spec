@@ -36,8 +36,8 @@
 
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
-Version:         390.116
-Release:         2%{?dist}
+Version:         390.129
+Release:         1%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -588,6 +588,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Tue Aug 06 2019 Leigh Scott <leigh123linux@gmail.com> - 3:390.129-1
+- Update to 390.129 release
+
 * Tue Mar 05 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 3:390.116-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
