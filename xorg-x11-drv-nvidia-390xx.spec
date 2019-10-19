@@ -70,7 +70,7 @@ Requires(postun): systemd
 %endif
 %if 0%{?fedora}
 # AppStream metadata generation
-BuildRequires:    python2
+BuildRequires:    python3
 BuildRequires:    libappstream-glib >= 0.6.3
 # Xorg with PrimaryGPU
 Requires:         Xorg >= 1.19.0-3
