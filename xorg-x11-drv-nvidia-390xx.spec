@@ -68,7 +68,7 @@ Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
 %endif
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 # AppStream metadata generation
 BuildRequires:    python3
 BuildRequires:    libappstream-glib >= 0.6.3
@@ -183,7 +183,7 @@ which is generated during the build of main package.
 %package libs
 Summary:         Libraries for %{name}
 Requires:        libvdpau%{?_isa} >= 0.5
-%if 0%{?fedora} >= 25
+%if 0%{?fedora} || 0%{?rhel} > 7
 Requires:        libglvnd-egl%{?_isa} >= 0.2
 Requires:        libglvnd-gles%{?_isa} >= 0.2
 Requires:        libglvnd-glx%{?_isa} >= 0.2
@@ -383,7 +383,7 @@ mkdir -p %{buildroot}%{_sysconfdir}/nvidia
 mkdir -p %{buildroot}%{_datadir}/nvidia-390xx-kmod-%{version}
 tar Jcf %{buildroot}%{_datadir}/nvidia-390xx-kmod-%{version}/nvidia-390xx-kmod-%{version}-%{_target_cpu}.tar.xz kernel
 
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 # install AppData and add modalias provides
 mkdir -p %{buildroot}%{_datadir}/pixmaps
 install -pm 0644 nvidia-settings.png %{buildroot}%{_datadir}/pixmaps/%{name}.png
@@ -479,7 +479,7 @@ fi ||:
 %{_udevrulesdir}/60-nvidia.rules
 %{_unitdir}/nvidia-fallback.service
 %endif
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 %{_metainfodir}/%{name}.metainfo.xml
 %{_datadir}/pixmaps/%{name}.png
 %{_dracut_conf_d}/99-nvidia-dracut.conf
@@ -531,7 +531,7 @@ fi ||:
 %{_libdir}/libGLESv1_CM_nvidia.so.%{version}
 %{_libdir}/libGLESv2_nvidia.so.2
 %{_libdir}/libGLESv2_nvidia.so.%{version}
-%if 0%{?rhel}
+%if 0%{?rhel} && 0%{?rhel} < 8
 %{_libdir}/libGLX_indirect.so.0
 %endif
 %{_libdir}/libGLX_nvidia.so.0
