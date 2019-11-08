@@ -36,8 +36,8 @@
 
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
-Version:         390.129
-Release:         2%{?dist}
+Version:         390.132
+Release:         1%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -588,6 +588,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Fri Nov 08 2019 Leigh Scott <leigh123linux@gmail.com> - 3:390.132-1
+- Update to 390.132 release
+
 * Sun Sep 22 2019 Leigh Scott <leigh123linux@googlemail.com> - 3:390.129-2
 - Fix conflict with rpmfusion-nonfree-obsolete-packages
 
