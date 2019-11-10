@@ -142,7 +142,7 @@ Summary:         CUDA driver for %{name}
 Requires:        %{_nvidia_serie}-kmod >= %{?epoch}:%{version}
 Requires:        %{name}-cuda-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Requires:        nvidia-persistenced%{?_isa} >= %{version}
-%if 0%{?fedora}
+%if 0%{?fedora} || 0%{?rhel} > 7
 Suggests:        nvidia-modprobe%{?_isa} >= %{version}
 # Boolean dependencies are only fedora
 %ifarch x86_64
