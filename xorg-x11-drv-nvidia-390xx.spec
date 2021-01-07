@@ -36,8 +36,8 @@
 
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
-Version:         390.138
-Release:         4%{?dist}
+Version:         390.141
+Release:         1%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -588,6 +588,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Thu Jan 07 2021 Henrik Nordstrom <henrik@henriknordstrom.net> - 3:390.141-1
+- Update to 390.141 release
+
 * Sun Sep 20 2020 Leigh Scott <leigh123linux@gmail.com> - 3:390.138-4
 - Use 390xx in appdata name
 
