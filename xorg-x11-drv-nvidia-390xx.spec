@@ -129,10 +129,6 @@ Summary:         Development files for %{name}
 Requires:        %{name}-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 Requires:        %{name}-cuda-libs%{?_isa} = %{?epoch}:%{version}-%{release}
 
-#Don't put an epoch here
-Provides:        cuda-drivers-devel = %{version}-100
-Provides:        cuda-drivers-devel%{?_isa} = %{version}-100
-
 %description devel
 This package provides the development files of the %{name} package,
 such as OpenGL headers.
@@ -590,6 +586,12 @@ fi ||:
 %changelog
 * Tue Apr 20 2021 Henrik Nordstrom <henrik@henriknordstrom.net> - 3:390.143-1
 - Update to 390.143 release
+
+* Fri Mar 12 2021 Nicolas Chauvet <kwizart@gmail.com> - 3:390.138-5
+- Adjust virtual provides
+
+* Thu Feb 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 3:390.141-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
 * Thu Jan 07 2021 Henrik Nordstrom <henrik@henriknordstrom.net> - 3:390.141-1
 - Update to 390.141 release
