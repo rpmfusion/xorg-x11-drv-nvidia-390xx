@@ -584,6 +584,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Sat Jan 29 2022 Henrik Nordstrom <henrik@henriknordstrom.net> - 3:390.147-1
+- Update to 390.147 release
+
 * Wed Aug 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 3:390.144-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
