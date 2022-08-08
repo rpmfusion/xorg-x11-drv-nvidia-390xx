@@ -37,7 +37,7 @@
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
 Version:         390.151
-Release:         1%{?dist}
+Release:         2%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -584,6 +584,10 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Mon Aug 08 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 3:390.151-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
+  5.1
+
 * Sat Jun 18 2022 Henrik Nordstrom <henrik@henriknordstrom.net> - 3:390.151-1
 - Update to 390.151 release
 
