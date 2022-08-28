@@ -7,27 +7,13 @@
 %global        _alternate_dir       %{_prefix}/lib/nvidia
 %global        _glvnd_libdir        %{_libdir}/libglvnd
 
-%if 0%{?rhel} == 6
-%global        _modprobe_d          %{_sysconfdir}/modprobe.d/
-# RHEL 6 does not have _udevrulesdir defined
-%global        _udevrulesdir        %{_prefix}/lib/udev/rules.d/
-%global        _modprobe_d          %{_sysconfdir}/modprobe.d/
-%global        _dracutopts          nouveau.modeset=0 rdblacklist=nouveau
-%global        _dracut_conf_d	    %{_sysconfdir}/dracut.conf.d
-%global        _grubby              /sbin/grubby --grub --update-kernel=ALL
-%else #rhel > 6 or fedora
 %global        _dracut_conf_d	    %{_prefix}/lib/dracut/dracut.conf.d
 %global        _modprobe_d          %{_prefix}/lib/modprobe.d/
 %global        _grubby              %{_sbindir}/grubby --update-kernel=ALL
-%if 0%{?rhel} == 7
-%global        _dracutopts          nouveau.modeset=0 rd.driver.blacklist=nouveau
-%else #fedora
-%if 0%{?fedora} >= 27
+%if 0%{?fedora} || 0%{?rhel} > 7
 %global        _dracutopts          rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1
 %else
-%global        _dracutopts          rd.driver.blacklist=nouveau modprobe.blacklist=nouveau
-%endif
-%endif
+%global        _dracutopts          nouveau.modeset=0 rd.driver.blacklist=nouveau
 %endif
 
 %global	       debug_package %{nil}
@@ -62,12 +48,11 @@ Source21:        nvidia-fallback.service
 
 ExclusiveArch:  i686 x86_64 armv7hl
 
-%if 0%{?rhel} > 6 || 0%{?fedora}
 Buildrequires:    systemd
 Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
-%endif
+
 %if 0%{?fedora} || 0%{?rhel} > 7
 # AppStream metadata generation
 BuildRequires:    python3
@@ -393,11 +378,9 @@ fn=%{buildroot}%{_metainfodir}/xorg-x11-drv-nvidia-390xx.metainfo.xml
 %endif
 
 # Install nvidia-fallback
-%if 0%{?rhel} > 6 || 0%{?fedora}
 mkdir -p %{buildroot}%{_unitdir}
 install -p -m 0644 %{SOURCE20} %{buildroot}%{_udevrulesdir}
 install -p -m 0644 %{SOURCE21} %{buildroot}%{_unitdir}
-%endif
 
 
 %pre
@@ -470,11 +453,9 @@ fi ||:
 %ghost %{_sysconfdir}/X11/xorg.conf.d/99-nvidia.conf
 %ghost %{_sysconfdir}/X11/xorg.conf.d/nvidia.conf
 %{_datadir}/X11/xorg.conf.d/nvidia.conf
-%if 0%{?rhel} > 6 || 0%{?fedora}
 %{_udevrulesdir}/10-nvidia.rules
 %{_udevrulesdir}/60-nvidia.rules
 %{_unitdir}/nvidia-fallback.service
-%endif
 %if 0%{?fedora} || 0%{?rhel} > 7
 %{_metainfodir}/%{name}.metainfo.xml
 %{_datadir}/pixmaps/%{name}.png
@@ -485,14 +466,8 @@ fi ||:
 %dir %{_datadir}/glvnd/egl_vendor.d
 %{_datadir}/X11/xorg.conf.d/00-avoid-glamor.conf
 %{_datadir}/X11/xorg.conf.d/99-nvidia.conf
-# RHEL6 uses /etc
-%if 0%{?rhel} == 6
-%config(noreplace) %{_modprobe_d}/blacklist-nouveau.conf
-%config(noreplace) %{_dracut_conf_d}/99-nvidia-dracut.conf
-%else
 %{_modprobe_d}/blacklist-nouveau.conf
 %{_dracut_conf_d}/99-nvidia-dracut.conf
-%endif
 %endif
 %{_bindir}/nvidia-bug-report.sh
 # Xorg libs that do not need to be multilib
