@@ -559,6 +559,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Sat Jan 07 2023 Henrik Nordstrom <henrik@henriknordstrom.net> - 3:390.157-1
+- Update to 390.157 release
+
 * Sun Aug 28 2022 Leigh Scott <leigh123linux@gmail.com> - 3:390.154-1
 - Update to 390.154 release
 
