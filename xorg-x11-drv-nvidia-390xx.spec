@@ -11,7 +11,7 @@
 %global        _modprobe_d          %{_prefix}/lib/modprobe.d/
 %global        _grubby              %{_sbindir}/grubby --update-kernel=ALL
 %if 0%{?fedora} || 0%{?rhel} > 7
-%global        _dracutopts          rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1
+%global        _dracutopts          rd.driver.blacklist=nouveau,nova_core modprobe.blacklist=nouveau,nova_core nvidia-drm.modeset=1
 %else
 %global        _dracutopts          nouveau.modeset=0 rd.driver.blacklist=nouveau
 %endif
@@ -23,7 +23,7 @@
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
 Version:         390.157
-Release:         4%{?dist}
+Release:         5%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -406,7 +406,7 @@ if [ "$1" -eq "1" ]; then
 fi || :
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
-%triggerun -- xorg-x11-drv-nvidia < 3:384.59-5
+%triggerun -- xorg-x11-drv-nvidia < 3:390.157-5
 if [ -f %{_sysconfdir}/default/grub ] ; then
   sed -i -e '/GRUB_GFXPAYLOAD_LINUX=text/d' %{_sysconfdir}/default/grub
   . %{_sysconfdir}/default/grub
@@ -559,6 +559,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Wed Jul 09 2025 Leigh Scott <leigh123linux@gmail.com> - 3:390.157-5
+- Blacklist nova-core driver
+
 * Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 3:390.157-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
