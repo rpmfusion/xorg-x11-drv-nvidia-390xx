@@ -23,7 +23,7 @@
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
 Version:         390.157
-Release:         5%{?dist}
+Release:         6%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -564,6 +564,9 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Mon Aug 25 2025 Nicolas Chauvet <kwizart@gmail.com> - 3:390.157-6
+-  Do not depend on a given opencl implementation - rhbz#2375547
+
 * Wed Jul 09 2025 Leigh Scott <leigh123linux@gmail.com> - 3:390.157-5
 - Blacklist nova-core driver
 
