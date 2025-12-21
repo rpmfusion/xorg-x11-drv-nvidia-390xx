@@ -69,10 +69,10 @@ Requires(postun): ldconfig
 Requires(post):   grubby
 Requires:         which
 Requires:         nvidia-settings-390xx%{?_isa} = %{version}
-#if 0%{?fedora}
-#Suggests:         nvidia-xconfig%{?_isa} = %{version}
+#if 0%%{?fedora}
+#Suggests:         nvidia-xconfig%%{?_isa} = %%{version}
 #else
-#Requires:         nvidia-xconfig%{?_isa} = %{version}
+#Requires:         nvidia-xconfig%%{?_isa} = %%{version}
 #endif
 
 Requires:        %{_nvidia_serie}-kmod >= %{?epoch}:%{version}
