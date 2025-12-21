@@ -23,7 +23,7 @@
 Name:            xorg-x11-drv-nvidia-390xx
 Epoch:           3
 Version:         390.157
-Release:         6%{?dist}
+Release:         7%{?dist}
 Summary:         NVIDIA's 390xx series proprietary display driver for NVIDIA graphic cards
 
 License:         Redistributable, no modification permitted
@@ -398,9 +398,6 @@ fi
 %post
 if [ "$1" -eq "1" ]; then
   %{_grubby} --remove-args='nomodeset' --args='%{_dracutopts}' &>/dev/null
-%if 0%{?fedora} || 0%{?rhel} >= 7
-  sed -i -e 's/GRUB_CMDLINE_LINUX="/GRUB_CMDLINE_LINUX="%{_dracutopts} /g' /etc/default/grub
-%endif
 # Until mutter enable egl stream support, we need to disable gdm wayland
 # https://bugzilla.redhat.com/1462052
 %if 0%{?fedora}
@@ -411,22 +408,7 @@ if [ "$1" -eq "1" ]; then
 fi || :
 
 %if 0%{?fedora} || 0%{?rhel} >= 7
-%triggerun -- xorg-x11-drv-nvidia < 3:390.157-5
-if [ -f %{_sysconfdir}/default/grub ] ; then
-  sed -i -e '/GRUB_GFXPAYLOAD_LINUX=text/d' %{_sysconfdir}/default/grub
-  . %{_sysconfdir}/default/grub
-  if [ -z "${GRUB_CMDLINE_LINUX+x}" ]; then
-    echo -e GRUB_CMDLINE_LINUX=\"%{_dracutopts}\" >> %{_sysconfdir}/default/grub
-  else
-    for i in %{_dracutopts} ; do
-      _has_string=$(echo ${GRUB_CMDLINE_LINUX} | fgrep -c $i)
-      if [ x"$_has_string" = x0 ] ; then
-        GRUB_CMDLINE_LINUX="${GRUB_CMDLINE_LINUX} ${i}"
-      fi
-    done
-    sed -i -e "s|^GRUB_CMDLINE_LINUX=.*|GRUB_CMDLINE_LINUX=\"${GRUB_CMDLINE_LINUX}\"|g" %{_sysconfdir}/default/grub
-  fi
-fi
+%triggerun -- xorg-x11-drv-%{_nvidia_serie} < 3:390.157-7
 %{_grubby} --args='%{_dracutopts}' &>/dev/null || :
 %endif
 
@@ -436,9 +418,6 @@ fi
 %preun
 if [ "$1" -eq "0" ]; then
   %{_grubby} --remove-args='%{_dracutopts}' &>/dev/null
-%if 0%{?fedora} || 0%{?rhel} >= 7
-  sed -i -e 's/%{_dracutopts} //g' /etc/default/grub
-%endif
   # Backup and disable previously used xorg.conf
   [ -f %{_sysconfdir}/X11/xorg.conf ] && mv %{_sysconfdir}/X11/xorg.conf %{_sysconfdir}/X11/xorg.conf.nvidia_uninstalled &>/dev/null
 fi ||:
@@ -564,6 +543,10 @@ fi ||:
 %{_libdir}/libnvidia-encode.so
 
 %changelog
+* Sun Dec 21 2025 Sérgio Basto <sergio@serjux.com> - 3:390.157-7
+- (#7331) Remove the /etc/default/grub workaround and handle NVIDIA package
+  correctly
+
 * Mon Aug 25 2025 Nicolas Chauvet <kwizart@gmail.com> - 3:390.157-6
 -  Do not depend on a given opencl implementation - rhbz#2375547
 
