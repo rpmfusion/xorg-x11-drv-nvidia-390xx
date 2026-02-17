@@ -395,7 +395,7 @@ if [ "$1" -eq "1" ]; then
   fi
 fi
 
-%post
+%posttrans
 if [ "$1" -eq "1" ]; then
   %{_grubby} --remove-args='nomodeset' --args='%{_dracutopts}' &>/dev/null
 # Until mutter enable egl stream support, we need to disable gdm wayland
@@ -406,11 +406,6 @@ if [ "$1" -eq "1" ]; then
   fi
 %endif
 fi || :
-
-%if 0%{?fedora} || 0%{?rhel} >= 7
-%triggerun -- xorg-x11-drv-%{_nvidia_serie} < 3:390.157-7
-%{_grubby} --args='%{_dracutopts}' &>/dev/null || :
-%endif
 
 %ldconfig_scriptlets libs
 %ldconfig_scriptlets cuda-libs
